@@ -1,7 +1,7 @@
-function convert() {
+exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = true, nullType = 'null') {
   "use strict";
   // ---- Global variables ----
-  var inJSON, outSwagger, tabCount, indentator;
+  var outSwagger;
 
   // ---- Functions definitions ----
   function changeIndentation(count) {
@@ -145,11 +145,7 @@ function convert() {
 
     //Convert null attributes to given type
     if (obj === null) {
-      outSwagger +=
-        indentator +
-        '"type": "' +
-        document.getElementById("nullType").value +
-        '",';
+      outSwagger += indentator + `"type": "${nullType}",`;
       outSwagger += indentator + '"format": "nullable"';
       return;
     }
@@ -202,19 +198,8 @@ function convert() {
   }
 
   // ---- Execution begins here ----
-  inJSON = document.getElementById("JSON").value;
-  try {
-    inJSON = JSON.parse(inJSON);
-  } catch (e) {
-    alert("Your JSON is invalid!\n(" + e + ")");
-    return;
-  }
-
-  //For recursive functions to keep track of the tab spacing
-  tabCount = 0;
-  indentator = "\n";
   // ---- Begin definitions ----
-  outSwagger = '"definitions": {';
+  outSwagger = '{';
   changeIndentation(1);
   //For each object inside the JSON
   for (var obj in inJSON) {
@@ -230,8 +215,5 @@ function convert() {
   changeIndentation(tabCount - 1);
   outSwagger += indentator + "}";
 
-  document.getElementById("Swagger").value = format(
-    outSwagger,
-    document.getElementById("yamlOut").checked
-  );
+  return JSON.parse(outSwagger);
 }
