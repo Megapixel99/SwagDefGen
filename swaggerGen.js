@@ -5,11 +5,11 @@ function convert() {
 
   // ---- Functions definitions ----
   function changeIndentation(count) {
-    /* 
+    /*
 	Assign 'indentator' a string beginning with newline and followed by 'count' tabs
 	Updates variable 'tabCount' with the number of tabs used
-	Global variables updated: 
-	-identator 
+	Global variables updated:
+	-identator
 	-tabcount
 	*/
 
@@ -28,9 +28,9 @@ function convert() {
   }
 
   function conversorSelection(obj) {
-    /* 
+    /*
     Selects which conversion method to call based on given obj
-	Global variables updated: 
+	Global variables updated:
     -outSwagger
     */
 
@@ -60,9 +60,9 @@ function convert() {
   }
 
   function convertNumber(num) {
-    /* 
+    /*
     Append to 'outSwagger' string with Swagger schema attributes relative to given number
-    Global variables updated: 
+    Global variables updated:
     -outSwagger
     */
 
@@ -86,9 +86,9 @@ function convert() {
 
   //date is ISO8601 format - https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14
   function convertString(str) {
-    /* 
+    /*
     Append to 'outSwagger' string with Swagger schema attributes relative to given string
-    Global variables updated: 
+    Global variables updated:
     -outSwagger
     */
 
@@ -104,16 +104,14 @@ function convert() {
       outSwagger += ",";
       outSwagger += indentator + '"format": "date"';
     }
-    if (document.getElementById("requestExamples").checked) {
-      //Log example if checkbox is checked
-      outSwagger += "," + indentator + '"example": "' + str + '"';
-    }
+    outSwagger += ","
+    outSwagger += indentator + `"example": ${JSON.stringify(str)}`;
   }
 
-  function convertArray(obj) {
-    /* 
+  function convertArray(arr) {
+    /*
     Append to 'outSwagger' string with Swagger schema attributes relative to given array
-    Global variables updated: 
+    Global variables updated:
     -outSwagger
     */
     outSwagger += indentator + '"type": "array",';
@@ -139,9 +137,9 @@ function convert() {
   }
 
   function convertObject(obj) {
-    /* 
+    /*
     Append to 'outSwagger' string with Swagger schema attributes relative to given object
-    Global variables updated: 
+    Global variables updated:
     -outSwagger
     */
 
