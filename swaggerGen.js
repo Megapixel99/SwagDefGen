@@ -50,11 +50,13 @@ exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = 
     } else if (typeof obj === "boolean") {
       // attribute is a boolean
       outSwagger += indentator + '"type": "boolean"';
+      if (examples) {
+        outSwagger += ","
+        outSwagger += indentator + '"example": false';
+      }
     } else {
       // not a valid Swagger type
-      alert(
-        'Property type "' + typeof obj + '" not valid for Swagger definitions'
-      );
+      console.error('Property type "' + typeof obj + '" not valid for Swagger definitions');
     }
     changeIndentation(tabCount - 1);
   }
@@ -66,7 +68,7 @@ exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = 
     -outSwagger
     */
 
-    if (num % 1 === 0 && !document.getElementById("noInt").checked) {
+    if (num % 1 === 0) {
       outSwagger += indentator + '"type": "integer",';
       if (num < 2147483647 && num > -2147483647) {
         outSwagger += indentator + '"format": "int32"';
@@ -76,11 +78,12 @@ exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = 
         outSwagger += indentator + '"format": "unsafe"';
       }
     } else {
-      outSwagger += indentator + '"type": "number"';
+      outSwagger += indentator + '"type": "number",';
+      outSwagger += indentator + '"format": "float"';
     }
-    if (document.getElementById("requestExamples").checked) {
-      //Log example if checkbox is checked
-      outSwagger += "," + indentator + '"example": "' + num + '"';
+    if (examples) {
+      outSwagger += ","
+      outSwagger += indentator + '"example": ' + num;
     }
   }
 
@@ -104,8 +107,10 @@ exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = 
       outSwagger += ",";
       outSwagger += indentator + '"format": "date"';
     }
-    outSwagger += ","
-    outSwagger += indentator + `"example": ${JSON.stringify(str)}`;
+    if (examples) {
+      outSwagger += ","
+      outSwagger += indentator + `"example": ${JSON.stringify(str)}`;
+    }
   }
 
   function convertArray(arr) {
@@ -173,12 +178,10 @@ exports.convert = function (inJSON, tabCount = 0, indentator = "\n", examples = 
       // No property inserted
       outSwagger += " }";
     }
-    // ---- Begin example scope ----
-    if (document.getElementById("requestExamples").checked) {
+    if (examples) {
       outSwagger += ","
       outSwagger += indentator + '"example": ' + JSON.stringify(examples).replaceAll('\n', indentator);
     }
-    // ---- End example scope ----
   }
 
   function format(value, yaml) {
